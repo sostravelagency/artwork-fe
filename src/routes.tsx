@@ -21,6 +21,8 @@ import TableOrder from "./Page/Authenticator/ComOrderTable/TableOrder";
 import Search from "./Page/Authenticator/Search/Search";
 import SearchGenre from "./Page/Authenticator/Search/Search2";
 import SearchUser from "./Page/Authenticator/Search/Search3";
+import OrderRequest from "./Page/Authenticator/Order_Request/OrderRequest";
+import Required from "./Page/Authenticator/Required/Required";
 
 export const routers = createBrowserRouter([ 
   { 
@@ -90,6 +92,14 @@ export const routers = createBrowserRouter([
   {
     path: "/order",
     element: <Order />,
+  }, 
+  {
+    path: "/orderRequest",
+    element: <OrderRequest />,
+  }, 
+  {
+    path: "/require",
+    element: <Required />,
   }, 
   {
     path: "/follow",

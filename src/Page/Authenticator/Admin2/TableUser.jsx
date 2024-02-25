@@ -282,18 +282,18 @@ export default function TableUser() {
             key: 'email',
         
         },
-        // {
-        //     title: <div className='flex justify-center '>trạng thái</div>,
-        //     dataIndex: '',
-        //     key: '',
-        //     width: 100,
-        //     render: (_, record) => (
-        //         <div >
-        //             <div className='flex justify-center text-lg text-cyan-600'>hoạt động</div>
-        //         </div>
-        //     ),
+        {
+            title: <div className='flex justify-center '>trạng thái</div>,
+            dataIndex: '',
+            key: '',
+            width: 100,
+            render: (_, record) => (
+                <div >
+                    <div className='flex justify-center text-lg text-cyan-600'>hoạt động</div>
+                </div>
+            ),
 
-        // },
+        },
         {
             title: <div className='flex justify-center '>Tài khoản</div>,
             dataIndex: '',
@@ -306,20 +306,20 @@ export default function TableUser() {
             ),
 
         },
-        // {
-        //     title: <div className='flex justify-center'>Action</div>,
-        //     key: 'operation',
-        //     width: 50,
-        //     render: (_, record) => (
-        //         <div className='flex items-center flex-col'>
-        //             <div className='mt-2'>
-        //                 <Typography.Link onClick={() => showModalDelete(record)}>
-        //                     <div className='text-red-600'>Khóa</div>
-        //                 </Typography.Link>
-        //             </div>
-        //         </div>
-        //     )
-        // },
+        {
+            title: <div className='flex justify-center'>Action</div>,
+            key: 'operation',
+            width: 50,
+            render: (_, record) => (
+                <div className='flex items-center flex-col'>
+                    <div className='mt-2'>
+                        <Typography.Link onClick={() => showModalDelete(record)}>
+                            <div className='text-red-600'>Khóa</div>
+                        </Typography.Link>
+                    </div>
+                </div>
+            )
+        },
     ];
 
     return (
