@@ -12,6 +12,7 @@ const ReportModal = (props) => {
   const { isModalOpen, setIsModalOpen, artwork, user } = props;
   const [checkedList, setCheckedList] = useState(defaultCheckedList);
   const checkAll = plainOptions.length === checkedList.length;
+  
   const indeterminate =
     checkedList.length > 0 && checkedList.length < plainOptions.length;
   const onChange = (list) => {
