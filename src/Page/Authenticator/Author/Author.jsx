@@ -15,6 +15,7 @@ import {
 } from '@ant-design/icons';
 import { useStorage } from '../../../hooks/useLocalStorage'
 import { useSocket } from '../../../App'
+import ReportModal from './ReportModal'
 export default function Author() {
     const socket= useSocket()
     const [Author, setAuthor] = useState([])
@@ -30,6 +31,7 @@ export default function Author() {
     const navigate = useNavigate();
     const [token, setToken] = useStorage("user", {});
     const [likedProductIds, setLikedProductIds] = useState([])
+    const [openModal, setOpenModal]= useState(false)
    
  
     const handFollow = () => {
@@ -54,6 +56,11 @@ export default function Author() {
             });
 
     }
+
+    const handleRequest= ()=> {
+        navigate("/require?id="+ Author?._id)
+    }
+
     const sendNotification = (textType, type) => {
         socket.emit("push_notification", { pusher: token._doc, author: Author?._id, textType, type })
     }
@@ -199,10 +206,17 @@ export default function Author() {
                         </span>
                     </div>
                     <p className="text-gray-700">{Author?.follow?.length} người theo dõi ·  {Author?.followAdd?.length} người đang theo dõi</p>
-                  
+                    {parseInt(Author?.follow?.length) > 0 && <button onClick={handleRequest} className="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
+                        Yêu cầu
+                    </button>}
+                    <br />
+                    <button onClick={()=> setOpenModal(true)} className="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
+                        Report user
+                    </button>
+                    <ReportModal isModalOpen={openModal} setIsModalOpen={setOpenModal} accuse={Author} user={token} />
+
                 </div>
-
-
+                
                 <div className="flex-1 flex flex-col items-center lg:items-end justify-end px-8 mt-2 mb-8">
                     <div className="flex items-center space-x-4 mt-2">
                         {!follow ? <button onClick={handFollow} className="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">

@@ -93,9 +93,7 @@ export default function ComHeader({ dataCart, updateCart }) {
   const [listNotification, setListNotification] = useState([]);
 
   useEffect(() => {
-    // Lắng nghe sự kiện "notification" từ máy chủ
     socket?.on("notification", (data) => {
-      // Xử lý thông báo nhận được
       if (data?.author === token._doc._id) {
         setListNotification((prevNotifications) => [
           ...prevNotifications,
@@ -117,7 +115,7 @@ export default function ComHeader({ dataCart, updateCart }) {
       case 2:
         return "follow";
       case 3:
-        return "bài viết";
+        return "";
 
       default:
         break;

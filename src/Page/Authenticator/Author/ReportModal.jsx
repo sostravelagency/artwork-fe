@@ -40,7 +40,7 @@ const ReportModal = (props) => {
 
   const handleSubmit = async () => {
     sendNotification("đã report", 1);
-    const result= await postFeedback("/feedback", {artwork: id, user: props?.artwork?.user, text: checkedList.concat(note).toString(), publisher: props?.user?._doc?._id, type: 1})
+    const result= await postFeedback("/feedback", {accuse: id, user: props?.accuse?._id, text: checkedList.concat(note).toString(), publisher: props?.user?._doc?._id, type: 2})
     if(result?.duplicate=== true) {
       swal("Thông báo", "Bạn chỉ được gửi report một lần cho một bài viết")
     }

@@ -9,7 +9,7 @@ import { Button, Input, Modal, Radio, Space, Table, Typography, notification } f
 import moment from 'moment/moment';
 import ComInput from '../../Components/ComInput/ComInput';
 import { textApp } from '../../../TextContent/textApp';
-import { deleteData, getData, postData } from '../../../api/api';
+import { deleteData, getData, postData, unblockData } from '../../../api/api';
 import ComButton from '../../Components/ComButton/ComButton';
 import ComHeader from '../../Components/ComHeader/ComHeader';
 
@@ -18,6 +18,7 @@ export default function TableUser() {
     const [disabled, setDisabled] = useState(false);
     const [products, setProducts] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpenUnblock, setIsModalOpenUnblock]= useState(false)
     const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
     const [dataRun, setDataRun] = useState(false);
     const [productRequestDefault, setProductRequestDefault] = useState({});
@@ -43,9 +44,21 @@ export default function TableUser() {
         setIsModalOpenDelete(true);
     };
 
+    const showModalUnblock= (e)=> {
+        setProductRequestDefault({
+            id: e._id
+        })
+        setIsModalOpenUnblock(true);
+    }
+
     const handleCancelDelete = () => {
         setIsModalOpenDelete(false);
     };
+
+    const handleCancelUnblock = () => {
+        setIsModalOpenUnblock(false);
+    };
+    
     const handleCancel = () => {
         setIsModalOpen(false);
     };
@@ -69,6 +82,31 @@ export default function TableUser() {
                     message: textApp.TableProduct.Notification.deleteError.message,
                     description:
                         "Không thể khóa tài khoản này"
+                });
+            })
+        setDataRun(!dataRun)
+
+    }
+    const unblockById = () => {
+        setDisabled(true)
+        unblockData('user', productRequestDefault.id)
+            .then((data) => {
+                setDisabled(false)
+                handleCancelUnblock()
+                api["success"]({
+                    message: textApp.TableProduct.Notification.delete.message,
+                    description:
+                        "Đã mở khóa tài khoản thành công"
+                });
+            })
+            .catch((error) => {
+                console.log(error);
+                setDisabled(false)
+                handleCancelUnblock()
+                api["error"]({
+                    message: textApp.TableProduct.Notification.deleteError.message,
+                    description:
+                        "Không thể mở khóa tài khoản này"
                 });
             })
         setDataRun(!dataRun)
@@ -312,11 +350,22 @@ export default function TableUser() {
             width: 50,
             render: (_, record) => (
                 <div className='flex items-center flex-col'>
-                    <div className='mt-2'>
-                        <Typography.Link onClick={() => showModalDelete(record)}>
-                            <div className='text-red-600'>Khóa</div>
-                        </Typography.Link>
-                    </div>
+                    {console.log(record)}
+                    {record?.deleted=== true && 
+                        <div className='mt-2'>
+                            <Typography.Link onClick={() => showModalUnblock(record)}>
+                                <div className='text-red-600'>Mở khoá</div>
+                            </Typography.Link>
+                        </div>
+                    }
+                    {
+                        record?.deleted=== false && 
+                        <div className='mt-2'>
+                            <Typography.Link onClick={() => showModalDelete(record)}>
+                                <div className='text-red-600'>Khóa</div>
+                            </Typography.Link>
+                        </div>
+                    }
                 </div>
             )
         },
@@ -443,6 +492,35 @@ export default function TableUser() {
                     </ComButton>
                 </div>
             </Modal>
+            {/*  */}
+            <Modal title='Mở khoá tài khoản?'
+                okType="primary text-black border-gray-700"
+                open={isModalOpenUnblock}
+
+                width={800}
+                style={{ top: 20 }}
+
+                onCancel={handleCancelUnblock}>
+                <div className='text-lg p-6'>Bạn có chắc chắn muốn mở khoá người dùng này không?</div>
+                <div className='flex'>
+                    <ComButton
+                        disabled={disabled}
+                        type="primary"
+                        danger
+                        onClick={unblockById}
+                    >
+                        Mở khoá
+                    </ComButton>
+                    <ComButton
+                        type="primary"
+                        disabled={disabled}
+                        onClick={handleCancelUnblock}
+                    >
+                        {textApp.TableProduct.modal.cancel}
+                    </ComButton>
+                </div>
+            </Modal>
+
         </>
     )
 }
