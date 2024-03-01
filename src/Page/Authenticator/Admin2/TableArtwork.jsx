@@ -31,7 +31,7 @@ import { useStorage } from "../../../hooks/useLocalStorage";
 import swal from "sweetalert";
 import { Link } from "react-router-dom";
 
-export default function TableFeedBack() {
+export default function TableArtwork() {
   const [disabled, setDisabled] = useState(false);
   const [isModalOpenAdd, setIsModalOpenAdd] = useState(false);
   const [image, setImages] = useState([]);
@@ -108,7 +108,7 @@ export default function TableFeedBack() {
   
   const deleteById = () => {
     setDisabled(true);
-    deleteData("feedback", productRequestDefault.id)
+    deleteData("artwork", productRequestDefault.id)
       .then((data) => {
         setDisabled(false);
         handleCancelDelete();
@@ -131,9 +131,9 @@ export default function TableFeedBack() {
   };
   useEffect(() => {
     setTimeout(() => {
-      getData(`/feedback`, {})
+      getData(`/artwork`, {})
         .then((data) => {
-          setProducts(data?.data?.docs?.filter(item=> item?.type=== 1));
+          setProducts(data?.data?.docs);
         })
         .catch((error) => {
           console.error("Error fetching items:", error);
@@ -141,13 +141,7 @@ export default function TableFeedBack() {
     }, 100);
   }, [dataRun]);
 
-  const onChange = (data) => {
-    const selectedImages = data;
-    // Tạo một mảng chứa đối tượng 'originFileObj' của các tệp đã chọn
-    const newImages = selectedImages.map((file) => file.originFileObj);
-    // Cập nhật trạng thái 'image' bằng danh sách tệp mới
-    setImages(newImages);
-  };
+
   const getColumnSearchProps = (dataIndex, title) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -253,30 +247,19 @@ export default function TableFeedBack() {
         <div>
           {console.log(record)}
           <h1>
-            <Link to={"/artwork/" + record.artwork._id}>Click tại đây</Link>
+            <Link to={"/artwork/" + record._id}>Click tại đây</Link>
           </h1>
         </div>
       ),
     },
     {
-      title: "Người báo cáo",
+      title: "Tiêu đề artwork",
       width: 150,
-      dataIndex: "user",
-      key: "user",
+      dataIndex: "content",
+      key: "content",
       render: (_, record) => (
         <div>
-          <h1>{record?.user?.username}</h1>
-        </div>
-      ),
-    },
-    {
-      title: "Lý do",
-      width: 100,
-      dataIndex: "text",
-      key: "text",
-      render: (_, record) => (
-        <div>
-          <h1>{record?.text}</h1>
+          <h1>{record?.content}</h1>
         </div>
       ),
     },
@@ -310,6 +293,7 @@ export default function TableFeedBack() {
         },
         render: (record) => (
           <>
+            {console.log(record)}
             <div>{record=== true && "Đã ẩn"}</div>
             <div>{record=== false && "Chưa ẩn"}</div>
           </>
@@ -326,7 +310,7 @@ export default function TableFeedBack() {
           <div>
             <Typography.Link
               onClick={async () => {
-                const result = await hideArtwork("feedback/hide",record._id, {artwork: (record.artwork?._id || record.user?._id)});
+                const result = await hideArtwork("artwork/hide",record._id, {artwork: record.artwork?._id});
                 if (result?.hide === true) {
                   swal("Thông báo", "Ẩn bài post thành công", "success");
                   setDataRun(!dataRun);
@@ -342,7 +326,7 @@ export default function TableFeedBack() {
             <Typography.Link
               style={{ whiteSpace: "nowrap" }}
               onClick={async () => {
-                const result = await unhideArtwork("feedback/unhide", record._id, {artwork: (record.artwork?._id || record.user?._id)});
+                const result = await unhideArtwork("artwork/unhide", record._id, {artwork: record.artwork?._id});
                 if (result?.unhide === true) {
                   swal("Thông báo", "Huỷ ẩn post thành công", "success");
                   setDataRun(!dataRun);

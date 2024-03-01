@@ -19,6 +19,7 @@ import { textApp } from "../../../TextContent/textApp";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useStorage } from "../../../hooks/useLocalStorage";
 import { useSocket } from "../../../App";
+import axios from "axios";
 
 const navigation = {
   pages: [
@@ -108,6 +109,17 @@ export default function ComHeader({ dataCart, updateCart }) {
     };
   }, [socket, token._doc]);
 
+  useEffect(() => {
+    (async () => {
+      const res = await axios({
+        url: "http://localhost:5000/api/notification",
+        method: "get",
+      });
+      const result = await res.data;
+      setListNotification(result)
+    })();
+  }, []);
+
   const renderType = (type) => {
     switch (type) {
       case 1:
@@ -122,7 +134,7 @@ export default function ComHeader({ dataCart, updateCart }) {
     }
   };
 
-  const renderTail= (type)=> {
+  const renderTail = (type) => {
     switch (type) {
       case 1:
         return "của bạn";
@@ -134,7 +146,7 @@ export default function ComHeader({ dataCart, updateCart }) {
       default:
         break;
     }
-  }
+  };
 
   return (
     <>
@@ -486,7 +498,8 @@ export default function ComHeader({ dataCart, updateCart }) {
       <Drawer title="Notification" onClose={onClose} open={openNotification}>
         {listNotification?.map((item, key) => (
           <div key={key}>
-            {item?.pusher?.name} {item?.textType} {renderType(item?.type)} {renderTail(item?.type)}
+            {item?.pusher?.name} {item?.textType} {renderType(item?.type)}{" "}
+            {renderTail(item?.type)}
           </div>
         ))}
       </Drawer>
