@@ -91,6 +91,12 @@ export default function ComHeader({ dataCart, updateCart }) {
     }
   };
 
+  const handleClick = (link) => {
+    const url = new URL(link);
+    const pathname = url.pathname;
+    navigate(pathname);
+  };
+
   const [listNotification, setListNotification] = useState([]);
 
   useEffect(() => {
@@ -116,8 +122,10 @@ export default function ComHeader({ dataCart, updateCart }) {
         method: "get",
       });
       const result = await res.data;
-      
-      setListNotification(result?.filter(item=> item?.author=== token._doc._id))
+
+      setListNotification(
+        result?.filter((item) => item?.author === token?._doc?._id)
+      );
     })();
   }, []);
 
@@ -498,7 +506,7 @@ export default function ComHeader({ dataCart, updateCart }) {
       </Affix>
       <Drawer title="Notification" onClose={onClose} open={openNotification}>
         {listNotification?.map((item, key) => (
-          <div key={key}>
+          <div style={{cursor: "pointer"}} onClick={() => handleClick(item?.link)} key={key}>
             {item?.pusher?.name} {item?.textType} {renderType(item?.type)}{" "}
             {renderTail(item?.type)}
           </div>

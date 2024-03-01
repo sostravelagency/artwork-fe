@@ -72,7 +72,7 @@ export default function Artwork() {
     useEffect(() => {
         getData(`/artwork/${id}`)
             .then((artwork) => {
-                if(artwork.data.hidden=== false ) {
+                if(artwork?.data?.hidden=== false ) {
                     setArtwork(artwork.data)
                     const userLikes = (artwork?.data?.likes || []).some(like => like.user === token?._doc?._id);
                     setLike(userLikes)
@@ -149,12 +149,12 @@ export default function Artwork() {
     }
 
     const sendNotification = async (textType, type) => {
-        socket.emit("push_notification", { artwork: artwork, pusher: user._doc, author: artwork?.user, textType, type })
+        socket.emit("push_notification", { artwork: artwork, pusher: user._doc, author: artwork?.user, textType, type, link: window.location.href })
         const res= await axios({
             url: "http://localhost:5000/api/notification",
             method: "post",
             data: {
-                artwork: artwork, pusher: user._doc, author: artwork?.user, textType, type
+                artwork: artwork, pusher: user._doc, author: artwork?.user, textType, type, link: window.location.href
             }
         })
         const result= await res.data
@@ -263,7 +263,7 @@ export default function Artwork() {
                                 <div className='flex gap-4 '>
                                     <div className='flex gap-1'><HeartFilled style={{ fontSize: '20px', color: 'red' }} /> <div className='flex items-center'>{artwork?.likes?.length}</div></div>
                                     {
-                                        token._doc.hidden=== true ? "" : 
+                                        token?._doc?.hidden=== true ? "" : 
                                         <button
                                             onClick={() => { !like ? handleLike(artwork._id, token?._doc?._id) : handleUnLike(artwork._id, token?._doc?._id) }}
                                             className={`flex gap-2 p-2 rounded-full  items-center  justify-center  hover:bg-[#f1f0f0] ${like ? 'text-[#cc0700]' : ''}`}
@@ -277,7 +277,7 @@ export default function Artwork() {
                                 <form className="" onSubmit={handleSubmit(onSubmit)}>
                                     <div className='p-6 flex justify-between items-start'>
                                         <ComTextArea
-                                            readOnly={token._doc.hidden=== true ? true : false}
+                                            readOnly={token?._doc?.hidden=== true ? true : false}
                                             placeholder="Thêm nhận xét"
                                             autoSize={{
                                                 minRows: 1,
@@ -295,7 +295,7 @@ export default function Artwork() {
 
                                         />
                                         {
-                                            token._doc.hidden=== false &&
+                                            token?._doc?.hidden!== true &&
                                             <>
                                                 {disabled || <button className='p-2' type='submit'>
                                                     <SendOutlined style={{ fontSize: '30px', }} />
