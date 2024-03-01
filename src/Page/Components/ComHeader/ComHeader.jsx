@@ -116,7 +116,8 @@ export default function ComHeader({ dataCart, updateCart }) {
         method: "get",
       });
       const result = await res.data;
-      setListNotification(result)
+      
+      setListNotification(result?.filter(item=> item?.author=== token._doc._id))
     })();
   }, []);
 
