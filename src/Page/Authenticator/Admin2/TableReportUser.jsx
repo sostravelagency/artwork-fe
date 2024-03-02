@@ -323,35 +323,40 @@ export default function TableReportUser() {
       render: (_, record) => (
         <div className="flex items-center flex-col">
           <div>
-            <Typography.Link
-              onClick={async () => {
-                const result = await hideArtwork("feedback/hide",record._id, {artwork: (record.artwork?._id || record.user?._id)});
-                if (result?.hide === true) {
-                  swal("Thông báo", "Ẩn bài post thành công", "success");
-                  setDataRun(!dataRun);
-                } else {
-                  swal("Thông báo", "Có lỗi xảy ra", "error");
-                }
-              }}
-            >
-              Ẩn
-            </Typography.Link>
+            {record?.hidden=== false && 
+              <Typography.Link
+                onClick={async () => {
+                  const result = await hideArtwork("feedback/hide",record._id, {artwork: (record.artwork?._id || record.user?._id)});
+                  if (result?.hide === true) {
+                    swal("Thông báo", "Ẩn bài post thành công", "success");
+                    setDataRun(!dataRun);
+                  } else {
+                    swal("Thông báo", "Có lỗi xảy ra", "error");
+                  }
+                }}
+              >
+                Ẩn
+              </Typography.Link>
+            }
           </div>
           <div>
-            <Typography.Link
-              style={{ whiteSpace: "nowrap" }}
-              onClick={async () => {
-                const result = await unhideArtwork("feedback/unhide", record._id, {artwork: (record.artwork?._id || record.user?._id)});
-                if (result?.unhide === true) {
-                  swal("Thông báo", "Huỷ ẩn post thành công", "success");
-                  setDataRun(!dataRun);
-                } else {
-                  swal("Thông báo", "Có lỗi xảy ra", "error");
-                }
-              }}
-            >
-              Huỷ ẩn
-            </Typography.Link>
+            {
+              record?.hidden=== true && 
+              <Typography.Link
+                style={{ whiteSpace: "nowrap" }}
+                onClick={async () => {
+                  const result = await unhideArtwork("feedback/unhide", record._id, {artwork: (record.artwork?._id || record.user?._id)});
+                  if (result?.unhide === true) {
+                    swal("Thông báo", "Huỷ ẩn post thành công", "success");
+                    setDataRun(!dataRun);
+                  } else {
+                    swal("Thông báo", "Có lỗi xảy ra", "error");
+                  }
+                }}
+              >
+                Huỷ ẩn
+              </Typography.Link>
+            }
           </div>
           <div className="mt-2">
             <Typography.Link onClick={() => showModalDelete(record)}>

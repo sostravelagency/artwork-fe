@@ -18,7 +18,15 @@ import {
 } from "antd";
 import { textApp } from "../../../TextContent/textApp";
 import { firebaseImgs } from "../../../upImgFirebase/firebaseImgs";
-import { acceptProduct, deleteData, getData, hideArtwork, putData, rejectProduct, unhideArtwork } from "../../../api/api";
+import {
+  acceptProduct,
+  deleteData,
+  getData,
+  hideArtwork,
+  putData,
+  rejectProduct,
+  unhideArtwork,
+} from "../../../api/api";
 import ComButton from "../../Components/ComButton/ComButton";
 import ComNumber from "../../Components/ComInput/ComNumber";
 import ComSelect from "../../Components/ComInput/ComSelect";
@@ -90,11 +98,9 @@ export default function TableArtwork() {
     setIsModalOpenDelete(true);
   };
 
-  
   const handleCancelDelete = () => {
     setIsModalOpenDelete(false);
   };
-
 
   function formatCurrency(number) {
     // Sử dụng hàm toLocaleString() để định dạng số thành chuỗi với ngăn cách hàng nghìn và mặc định là USD.
@@ -105,7 +111,7 @@ export default function TableArtwork() {
       });
     }
   }
-  
+
   const deleteById = () => {
     setDisabled(true);
     deleteData("artwork", productRequestDefault.id)
@@ -140,7 +146,6 @@ export default function TableArtwork() {
         });
     }, 100);
   }, [dataRun]);
-
 
   const getColumnSearchProps = (dataIndex, title) => ({
     filterDropdown: ({
@@ -276,29 +281,29 @@ export default function TableArtwork() {
       ),
     },
     {
-        title: "Trạng thái",
-        dataIndex: "hidden",
-        key: "hidden",
-        width: 300,
-        // ...getColumnSearchProps("accept", "trạng thái"),
-        // render: (_, record) => (
-  
-        //     <div className="text-sm text-gray-700 line-clamp-4">
-        //         <p className="text-sm text-gray-700 line-clamp-4">{record.description}</p>
-        //     </div>
-  
-        // ),
-        ellipsis: {
-          showTitle: false,
-        },
-        render: (record) => (
-          <>
-            {console.log(record)}
-            <div>{record=== true && "Đã ẩn"}</div>
-            <div>{record=== false && "Chưa ẩn"}</div>
-          </>
-        ),
+      title: "Trạng thái",
+      dataIndex: "hidden",
+      key: "hidden",
+      width: 300,
+      // ...getColumnSearchProps("accept", "trạng thái"),
+      // render: (_, record) => (
+
+      //     <div className="text-sm text-gray-700 line-clamp-4">
+      //         <p className="text-sm text-gray-700 line-clamp-4">{record.description}</p>
+      //     </div>
+
+      // ),
+      ellipsis: {
+        showTitle: false,
       },
+      render: (record) => (
+        <>
+          {console.log(record)}
+          <div>{record === true && "Đã ẩn"}</div>
+          <div>{record === false && "Chưa ẩn"}</div>
+        </>
+      ),
+    },
     {
       title: "Action",
       key: "operation",
@@ -308,35 +313,45 @@ export default function TableArtwork() {
       render: (_, record) => (
         <div className="flex items-center flex-col">
           <div>
-            <Typography.Link
-              onClick={async () => {
-                const result = await hideArtwork("artwork/hide",record._id, {artwork: record.artwork?._id});
-                if (result?.hide === true) {
-                  swal("Thông báo", "Ẩn bài post thành công", "success");
-                  setDataRun(!dataRun);
-                } else {
-                  swal("Thông báo", "Có lỗi xảy ra", "error");
-                }
-              }}
-            >
-              Ẩn
-            </Typography.Link>
+            {record?.hidden === false && (
+              <Typography.Link
+                onClick={async () => {
+                  const result = await hideArtwork("artwork/hide", record._id, {
+                    artwork: record.artwork?._id,
+                  });
+                  if (result?.hide === true) {
+                    swal("Thông báo", "Ẩn bài post thành công", "success");
+                    setDataRun(!dataRun);
+                  } else {
+                    swal("Thông báo", "Có lỗi xảy ra", "error");
+                  }
+                }}
+              >
+                Ẩn
+              </Typography.Link>
+            )}
           </div>
           <div>
-            <Typography.Link
-              style={{ whiteSpace: "nowrap" }}
-              onClick={async () => {
-                const result = await unhideArtwork("artwork/unhide", record._id, {artwork: record.artwork?._id});
-                if (result?.unhide === true) {
-                  swal("Thông báo", "Huỷ ẩn post thành công", "success");
-                  setDataRun(!dataRun);
-                } else {
-                  swal("Thông báo", "Có lỗi xảy ra", "error");
-                }
-              }}
-            >
-              Huỷ ẩn
-            </Typography.Link>
+            {record?.hidden === true && (
+              <Typography.Link
+                style={{ whiteSpace: "nowrap" }}
+                onClick={async () => {
+                  const result = await unhideArtwork(
+                    "artwork/unhide",
+                    record._id,
+                    { artwork: record.artwork?._id }
+                  );
+                  if (result?.unhide === true) {
+                    swal("Thông báo", "Huỷ ẩn post thành công", "success");
+                    setDataRun(!dataRun);
+                  } else {
+                    swal("Thông báo", "Có lỗi xảy ra", "error");
+                  }
+                }}
+              >
+                Huỷ ẩn
+              </Typography.Link>
+            )}
           </div>
           <div className="mt-2">
             <Typography.Link onClick={() => showModalDelete(record)}>
